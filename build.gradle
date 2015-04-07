@@ -1,0 +1,21 @@
+apply plugin: 'java'
+
+repositories { mavenCentral() }
+
+dependencies { 
+  testCompile 'junit:junit:4.12' 
+}
+
+test {
+  useJUnit {
+    excludeCategories 'com.mmakowski.cmann.testcategories.AcceptanceTest'
+  }
+}
+
+task acceptanceTest(type: Test) {
+  useJUnit {
+    includeCategories 'com.mmakowski.cmann.testcategories.AcceptanceTest'
+  }
+}
+
+build.dependsOn acceptanceTest
