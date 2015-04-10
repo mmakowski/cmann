@@ -18,7 +18,7 @@ public final class CommandExecutor {
         return Result.EMPTY;
     }
 
-    public Result execute(Reading reading) {
+    public Result execute(final Reading reading) {
         return Result.withMessages(messages);
     }
 }
