@@ -4,7 +4,9 @@ sourceCompatibility = 1.8
 
 repositories { mavenCentral() }
 
-dependencies { 
+dependencies {
+  compile     'com.google.guava:guava:18.0'
+
   testCompile 'junit:junit:4.12' 
 }
 

@@ -2,17 +2,16 @@ package com.mmakowski.cmann.acceptance;
 
 import com.mmakowski.cmann.assembly.CmAnnAssembly;
 import com.mmakowski.cmann.testcategories.AcceptanceTest;
+import com.mmakowski.util.TestClock;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import static java.util.concurrent.TimeUnit.MINUTES;
 
 @Category(AcceptanceTest.class)
 public final class CmAnnAcceptanceTests {
@@ -22,13 +21,13 @@ public final class CmAnnAcceptanceTests {
             test.assertOutput(">");
             test.input("Alice -> I love the weather today");
             test.assertOutput(">");
-            test.advanceClock(3, MINUTES);
+            test.advanceClock(Duration.ofMinutes(3));
             test.input("Bob -> Damn! We lost!");
             test.assertOutput(">");
-            test.advanceClock(1, MINUTES);
+            test.advanceClock(Duration.ofMinutes(1));
             test.input("Bob -> Good game though.");
             test.assertOutput(">");
-            test.advanceClock(1, MINUTES);
+            test.advanceClock(Duration.ofMinutes(1));
             test.input("Alice");
             test.assertOutput("I love the weather today (5 minutes ago)",
                               ">");
@@ -60,8 +59,8 @@ public final class CmAnnAcceptanceTests {
             Assert.assertEquals(Arrays.asList(expectedLines), actualLines);
         }
 
-        public void advanceClock(final int time, final TimeUnit timeUnit) {
-            clock.advance(time, timeUnit);
+        public void advanceClock(final Duration duration) {
+            clock.advance(duration);
         }
 
         @Override
