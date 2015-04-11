@@ -3,7 +3,7 @@ package com.mmakowski.cmann.assembly;
 import org.junit.Assert;
 import org.junit.Test;
 
-public final class CommandParserTest {
+public final class TextSplittingCommandParserTest {
     @Test
     public void parsesPosting() {
         assertParsesTo(new Posting("Bob", "Damn! We lost!"), "Bob -> Damn! We lost!");
@@ -15,6 +15,6 @@ public final class CommandParserTest {
     }
 
     private static void assertParsesTo(final Command expected, final String input) {
-        Assert.assertEquals(expected, new CommandParser().parse(input));
+        Assert.assertEquals(expected, new TextSplittingCommandParser().parse(input));
     }
 }

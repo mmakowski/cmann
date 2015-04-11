@@ -15,7 +15,7 @@ public class CmAnnAssembly implements Runnable {
 
     @Override
     public void run() {
-        final CommandParser parser = new CommandParser();
+        final TextSplittingCommandParser parser = new TextSplittingCommandParser();
         final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(clock);
         while (!Thread.currentThread().isInterrupted()) {
             out.writeLine(">");
