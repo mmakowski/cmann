@@ -1,5 +1,6 @@
 package com.mmakowski.cmann.assembly;
 
+import com.mmakowski.cmann.model.*;
 import com.mmakowski.util.Clock;
 
 import java.util.ArrayList;

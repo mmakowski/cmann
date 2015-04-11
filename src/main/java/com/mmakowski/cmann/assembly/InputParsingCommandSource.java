@@ -1,5 +1,7 @@
 package com.mmakowski.cmann.assembly;
 
+import com.mmakowski.cmann.model.Command;
+
 public final class InputParsingCommandSource implements CommandSource {
     private final InputReader reader;
     private final CommandParser parser;
@@ -10,7 +12,7 @@ public final class InputParsingCommandSource implements CommandSource {
     }
 
     @Override
-    public Command nextCommand() throws InterruptedException {
+    public Command blockingGetCommand() throws InterruptedException {
         return parser.parse(reader.blockingReadLine());
     }
 }

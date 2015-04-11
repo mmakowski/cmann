@@ -1,8 +1,8 @@
-package com.mmakowski.cmann.assembly;
+package com.mmakowski.cmann.model;
 
 import com.google.common.base.Objects;
 
-public class Reading implements Command {
+public final class Reading implements Command {
     public final String userName;
 
     public Reading(final String userName) {

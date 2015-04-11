@@ -15,7 +15,7 @@ public final class Repl implements Runnable {
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                sink.receive(executor.execute(source.nextCommand()));
+                sink.receive(executor.execute(source.blockingGetCommand()));
             } catch (final InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

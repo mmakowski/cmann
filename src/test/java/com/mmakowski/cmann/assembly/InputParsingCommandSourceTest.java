@@ -1,5 +1,6 @@
 package com.mmakowski.cmann.assembly;
 
+import com.mmakowski.cmann.model.Command;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -21,8 +22,8 @@ public final class InputParsingCommandSourceTest {
 
         final InputParsingCommandSource source = new InputParsingCommandSource(reader, parser);
 
-        Assert.assertEquals(command1, source.nextCommand());
-        Assert.assertEquals(command2, source.nextCommand());
+        Assert.assertEquals(command1, source.blockingGetCommand());
+        Assert.assertEquals(command2, source.blockingGetCommand());
     }
 }
 

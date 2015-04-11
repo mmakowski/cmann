@@ -1,8 +1,10 @@
 package com.mmakowski.cmann.assembly;
 
+import com.mmakowski.cmann.model.Message;
+import com.mmakowski.cmann.model.Result;
 import com.mmakowski.util.Clock;
 
-public class CmAnnAssembly implements Runnable {
+public final class CmAnnAssembly implements Runnable {
     private final InputReader in;
     private final OutputWriter out;
     private final Clock clock;

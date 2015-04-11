@@ -1,8 +1,8 @@
-package com.mmakowski.cmann.assembly;
+package com.mmakowski.cmann.model;
 
 import com.google.common.base.Objects;
 
-public class Posting implements Command {
+public final class Posting implements Command {
     public final String userName;
     public final String message;
 

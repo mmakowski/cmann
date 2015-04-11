@@ -1,5 +1,8 @@
 package com.mmakowski.cmann.assembly;
 
+import com.mmakowski.cmann.model.Command;
+import com.mmakowski.cmann.model.Posting;
+import com.mmakowski.cmann.model.Reading;
 import org.junit.Assert;
 import org.junit.Test;
 

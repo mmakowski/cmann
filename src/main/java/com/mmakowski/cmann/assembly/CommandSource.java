@@ -1,5 +1,7 @@
 package com.mmakowski.cmann.assembly;
 
+import com.mmakowski.cmann.model.Command;
+
 public interface CommandSource {
-    Command nextCommand() throws InterruptedException;
+    Command blockingGetCommand() throws InterruptedException;
 }

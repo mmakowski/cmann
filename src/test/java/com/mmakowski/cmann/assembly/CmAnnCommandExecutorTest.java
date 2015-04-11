@@ -1,5 +1,9 @@
 package com.mmakowski.cmann.assembly;
 
+import com.mmakowski.cmann.model.Message;
+import com.mmakowski.cmann.model.Posting;
+import com.mmakowski.cmann.model.Reading;
+import com.mmakowski.cmann.model.Result;
 import com.mmakowski.util.TestClock;
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.mmakowski.cmann.assembly;
+package com.mmakowski.cmann.model;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;

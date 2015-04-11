@@ -1,5 +1,7 @@
 package com.mmakowski.cmann.assembly;
 
+import com.mmakowski.cmann.model.Command;
+import com.mmakowski.cmann.model.Result;
 import org.junit.Test;
 
 import org.mockito.Mockito;
@@ -27,7 +29,7 @@ public final class ReplTest {
                 interrupt.execute();
                 return command;
             };
-            Mockito.when(source.nextCommand()).thenReturn(command).then(interruptAndReturnCommand).thenReturn(command);
+            Mockito.when(source.blockingGetCommand()).thenReturn(command).then(interruptAndReturnCommand).thenReturn(command);
 
             final CommandExecutor executor = Mockito.mock(CommandExecutor.class);
             Mockito.when(executor.execute(command)).thenReturn(result);
