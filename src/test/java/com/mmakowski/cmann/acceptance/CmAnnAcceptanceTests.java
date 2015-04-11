@@ -47,7 +47,7 @@ public final class CmAnnAcceptanceTests {
 
         public Fixture() {
             final CmAnnAssembly assembly = new CmAnnAssembly(in.reader, out.writer, clock);
-            asyncExecutor.execute(assembly);
+            asyncExecutor.execute(assembly.repl);
         }
 
         public void input(final String line) {

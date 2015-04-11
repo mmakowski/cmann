@@ -5,7 +5,7 @@ import com.mmakowski.util.Clock;
 
 import java.time.Duration;
 
-public class CmAnnMessageFormat {
+public final class CmAnnMessageFormat implements MessageFormat {
     private final Clock clock;
     private final DurationFormat durationFormat;
 
