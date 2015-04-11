@@ -15,10 +15,13 @@ public class CmAnnAssembly implements Runnable {
 
     @Override
     public void run() {
+        final CommandParser parser = new CommandParser();
+        final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(clock);
         while (!Thread.currentThread().isInterrupted()) {
             out.writeLine(">");
             try {
-                in.blockingReadLine();
+                final Result result = executor.execute(parser.parse(in.blockingReadLine()));
+                for (final Message message : result.messages) out.writeLine(message.userName + " - " + message.message + " ()");
             } catch (final InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
