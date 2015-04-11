@@ -1,4 +1,4 @@
-package com.mmakowski.cmann.assembly;
+package com.mmakowski.cmann.exec;
 
 import com.mmakowski.cmann.model.Message;
 import com.mmakowski.cmann.model.Posting;
@@ -34,4 +34,3 @@ public final class CmAnnCommandExecutorTest {
         Assert.assertEquals(Result.withMessages(new Message(testPosting.userName, testPosting.message, timeOfPosting)), readingResult);
     }
 }
-

@@ -1,5 +1,6 @@
-package com.mmakowski.cmann.assembly;
+package com.mmakowski.cmann.text;
 
+import com.mmakowski.cmann.exec.CommandSource;
 import com.mmakowski.cmann.model.Command;
 
 public final class InputParsingCommandSource implements CommandSource {

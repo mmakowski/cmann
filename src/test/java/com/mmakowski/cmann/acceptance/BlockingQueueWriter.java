@@ -1,6 +1,6 @@
 package com.mmakowski.cmann.acceptance;
 
-import com.mmakowski.cmann.assembly.OutputWriter;
+import com.mmakowski.cmann.text.OutputWriter;
 
 import java.util.concurrent.BlockingQueue;
 

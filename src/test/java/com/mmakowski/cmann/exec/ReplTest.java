@@ -1,12 +1,10 @@
-package com.mmakowski.cmann.assembly;
+package com.mmakowski.cmann.exec;
 
 import com.mmakowski.cmann.model.Command;
 import com.mmakowski.cmann.model.Result;
 import org.junit.Test;
-
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
-
 
 public final class ReplTest {
     @Test

@@ -1,5 +1,6 @@
-package com.mmakowski.cmann.assembly;
+package com.mmakowski.cmann.text;
 
+import com.mmakowski.cmann.exec.ResultSink;
 import com.mmakowski.cmann.model.Result;
 
 public final class OutputWritingResultSink implements ResultSink {

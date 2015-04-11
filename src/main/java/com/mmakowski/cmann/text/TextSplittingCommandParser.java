@@ -1,8 +1,9 @@
-package com.mmakowski.cmann.assembly;
+package com.mmakowski.cmann.text;
 
 import com.mmakowski.cmann.model.Command;
 import com.mmakowski.cmann.model.Posting;
 import com.mmakowski.cmann.model.Reading;
+import com.mmakowski.cmann.text.CommandParser;
 
 public final class TextSplittingCommandParser implements CommandParser {
     public Command parse(final String inputLine) {

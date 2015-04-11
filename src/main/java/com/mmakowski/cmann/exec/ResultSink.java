@@ -1,4 +1,4 @@
-package com.mmakowski.cmann.assembly;
+package com.mmakowski.cmann.exec;
 
 import com.mmakowski.cmann.model.Result;
 

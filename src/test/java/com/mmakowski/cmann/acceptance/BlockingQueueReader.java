@@ -1,6 +1,6 @@
 package com.mmakowski.cmann.acceptance;
 
-import com.mmakowski.cmann.assembly.InputReader;
+import com.mmakowski.cmann.text.InputReader;
 
 import java.util.concurrent.BlockingQueue;
 

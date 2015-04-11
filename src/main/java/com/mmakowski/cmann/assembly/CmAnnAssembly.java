@@ -1,5 +1,7 @@
 package com.mmakowski.cmann.assembly;
 
+import com.mmakowski.cmann.exec.*;
+import com.mmakowski.cmann.text.*;
 import com.mmakowski.util.Clock;
 
 public final class CmAnnAssembly {

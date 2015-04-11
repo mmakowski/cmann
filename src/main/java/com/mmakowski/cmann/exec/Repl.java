@@ -1,4 +1,4 @@
-package com.mmakowski.cmann.assembly;
+package com.mmakowski.cmann.exec;
 
 public final class Repl implements Runnable {
     private final CommandSource source;
