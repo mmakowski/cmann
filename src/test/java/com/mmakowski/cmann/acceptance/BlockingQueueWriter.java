@@ -12,7 +12,12 @@ final class BlockingQueueWriter implements OutputWriter {
     }
 
     @Override
+    public void write(final String str) {
+        queue.offer(str);
+    }
+
+    @Override
     public void writeLine(final String line) {
-        queue.offer(line);
+        queue.offer(line + "\n");
     }
 }

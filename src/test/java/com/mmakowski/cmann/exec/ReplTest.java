@@ -39,6 +39,7 @@ public final class ReplTest {
             repl.run();
 
             Mockito.verify(sink, Mockito.times(expectedNumberOfCommandProcessed)).receive(result);
+            Mockito.verifyNoMoreInteractions(sink);
         } finally {
             clearInterruptedFlag();
         }

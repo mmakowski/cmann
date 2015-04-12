@@ -1,5 +1,6 @@
 package com.mmakowski.cmann.acceptance;
 
+import com.google.common.collect.ImmutableList;
 import com.mmakowski.cmann.assembly.CmAnnAssembly;
 import com.mmakowski.cmann.testcategories.AcceptanceTest;
 import com.mmakowski.util.TestClock;
@@ -8,7 +9,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,23 +18,23 @@ public final class CmAnnAcceptanceTests {
     @Test
     public void postedMessagesCanBeRead() {
         try (Fixture test = new Fixture()) {
-            test.assertOutput(">");
+            test.assertOutput("> ");
             test.input("Alice -> I love the weather today");
-            test.assertOutput(">");
+            test.assertOutput("> ");
             test.advanceClock(Duration.ofMinutes(3));
             test.input("Bob -> Damn! We lost!");
-            test.assertOutput(">");
+            test.assertOutput("> ");
             test.advanceClock(Duration.ofMinutes(1));
             test.input("Bob -> Good game though.");
-            test.assertOutput(">");
+            test.assertOutput("> ");
             test.advanceClock(Duration.ofMinutes(1));
             test.input("Alice");
             test.assertOutput("I love the weather today (5 minutes ago)",
-                              ">");
+                              "> ");
             test.input("Bob");
             test.assertOutput("Good game though. (1 minute ago)",
                               "Damn! We lost! (2 minutes ago)",
-                              ">");
+                              "> ");
         }
     }
 
@@ -56,7 +56,15 @@ public final class CmAnnAcceptanceTests {
 
         public void assertOutput(final String... expectedLines) {
             final List<String> actualLines = linesReader.readAvailableLines(out.reader);
-            Assert.assertEquals(Arrays.asList(expectedLines), actualLines);
+            final List<String> expectedLinesWithLineEndings = separateWithLineEndings(expectedLines);
+            Assert.assertEquals(expectedLinesWithLineEndings, actualLines);
+        }
+
+        private List<String> separateWithLineEndings(final String[] lines) {
+            final ImmutableList.Builder<String> builder = ImmutableList.builder();
+            for (int i = 0; i < lines.length - 1; i++) builder.add(lines[i] += "\n");
+            if (lines.length > 0) builder.add(lines[lines.length - 1]);
+            return builder.build();
         }
 
         public void advanceClock(final Duration duration) {

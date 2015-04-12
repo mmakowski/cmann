@@ -9,7 +9,7 @@ public final class CmAnnAssembly {
 
     public CmAnnAssembly(final InputReader in, final OutputWriter out, final Clock clock) {
         final CommandParser parser = new TextSplittingCommandParser();
-        final CommandSource source = new InputParsingCommandSource(in, parser);
+        final CommandSource source = new InputParsingCommandSource(out, in, parser);
 
         final CommandExecutor executor = new CmAnnCommandExecutor(clock);
 
