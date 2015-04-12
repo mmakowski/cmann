@@ -36,14 +36,15 @@ public final class CmAnnCommandExecutorTest {
     }
 
     @Test
-    public void readingOutputsAllMessagesOfSpecifiedUserInOrderOfPosting() {
+    public void readingOutputsAllMessagesOfSpecifiedUserInInverseOrderOfPosting() {
         final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(TestClock.withCurrentInstant(timeOfPosting));
 
         for (final Posting posting : Iterables.concat(alicesPostings, bobsPostings)) executor.execute(posting);
 
         final Result readingResult = executor.execute(new Reading(alice));
 
-        final Result expectedResult = Result.withMessages(Iterables.transform(alicesPostings, toMessage));
+        final Iterable<Message> reversedAlicesMessages = ImmutableList.copyOf(Iterables.transform(alicesPostings, toMessage)).reverse();
+        final Result expectedResult = Result.withMessages(reversedAlicesMessages);
         Assert.assertEquals(expectedResult, readingResult);
     }
 

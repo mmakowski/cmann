@@ -24,8 +24,8 @@ public final class CmAnnCommandExecutor implements CommandExecutor {
 
     private Result execute(final Posting posting) {
         final ImmutableList.Builder<Message> updatedMessages = ImmutableList.builder();
-        updatedMessages.addAll(messagesBy(posting.userName));
         updatedMessages.add(new Message(posting.userName, posting.message, clock.currentInstant()));
+        updatedMessages.addAll(messagesBy(posting.userName));
         messagesPerUser.put(posting.userName, updatedMessages.build());
         return Result.EMPTY;
     }
