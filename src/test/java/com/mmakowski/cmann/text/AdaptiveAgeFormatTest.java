@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.time.Duration;
 
-public final class AdaptiveDurationFormatTest {
+public final class AdaptiveAgeFormatTest {
     @Test
     public void formatsAsNowIfShorterThanSecond() {
         assertFormat("now", Duration.ofMillis(999));
@@ -13,17 +13,17 @@ public final class AdaptiveDurationFormatTest {
 
     @Test
     public void formatsAsSecondsIfShorterThanMinute() {
-        assertFormat("59 seconds", Duration.ofSeconds(59));
+        assertFormat("59 seconds ago", Duration.ofSeconds(59));
     }
 
     @Test
     public void formatsAsMinutesIfShortenThanHour() {
-        assertFormat("59 minutes", Duration.ofMinutes(59));
+        assertFormat("59 minutes ago", Duration.ofMinutes(59));
     }
 
     @Test
     public void formatsAsHoursIfShortenThanDay() {
-        assertFormat("23 hours", Duration.ofHours(23));
+        assertFormat("23 hours ago", Duration.ofHours(23));
     }
 
     @Test
@@ -33,19 +33,19 @@ public final class AdaptiveDurationFormatTest {
 
     @Test
     public void discardsFractionalPartsOfTimeUnit() {
-        assertFormat("2 seconds", Duration.ofMillis(2400));
-        assertFormat("2 minutes", Duration.ofSeconds(150));
-        assertFormat("2 hours", Duration.ofMinutes(150));
+        assertFormat("2 seconds ago", Duration.ofMillis(2400));
+        assertFormat("2 minutes ago", Duration.ofSeconds(150));
+        assertFormat("2 hours ago", Duration.ofMinutes(150));
     }
 
     @Test
     public void usesSingularTimeUnitIfNumberIsOne() {
-        assertFormat("1 second", Duration.ofSeconds(1));
-        assertFormat("1 minute", Duration.ofMinutes(1));
-        assertFormat("1 hour", Duration.ofHours(1));
+        assertFormat("1 second ago", Duration.ofSeconds(1));
+        assertFormat("1 minute ago", Duration.ofMinutes(1));
+        assertFormat("1 hour ago", Duration.ofHours(1));
     }
 
     private static void assertFormat(final String expected, final Duration duration) {
-        Assert.assertEquals(expected, new AdaptiveDurationFormat().apply(duration));
+        Assert.assertEquals(expected, new AdaptiveAgeFormat().apply(duration));
     }
 }

@@ -2,7 +2,7 @@ package com.mmakowski.cmann.text;
 
 import java.time.Duration;
 
-public final class AdaptiveDurationFormat implements DurationFormat {
+public final class AdaptiveAgeFormat implements DurationFormat {
     @Override
     public String apply(final Duration duration) {
         final String formatted;
@@ -25,7 +25,7 @@ public final class AdaptiveDurationFormat implements DurationFormat {
             number = duration.toHours();
             unit = "hour";
         }
-        return number + " " + unit + (number == 1 ? "" : "s");
+        return number + " " + unit + (number == 1 ? "" : "s") + " ago";
     }
 
     private static boolean isShorter(final Duration duration1, final Duration duration2) {

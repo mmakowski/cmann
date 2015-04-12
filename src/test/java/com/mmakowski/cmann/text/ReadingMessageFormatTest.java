@@ -9,9 +9,9 @@ import org.mockito.Mockito;
 import java.time.Duration;
 import java.time.Instant;
 
-public final class CmAnnMessageFormatTest {
+public final class ReadingMessageFormatTest {
     @Test
-    public void formatsMessageAccordingToPrescribedFormat() {
+    public void formatsMessageAccordingToPrescribedReadingFormat() {
         final TestClock clock = TestClock.withCurrentInstant(Instant.parse("2015-04-11T12:01:00Z"));
         final Message message = new Message("User name", "Message text", clock.currentInstant());
 
@@ -22,10 +22,10 @@ public final class CmAnnMessageFormatTest {
         final String formattedDuration = "13 hours";
         Mockito.when(durationFormat.apply(timeSincePosting)).thenReturn(formattedDuration);
 
-        final CmAnnMessageFormat format = new CmAnnMessageFormat(clock, durationFormat);
+        final ReadingMessageFormat format = new ReadingMessageFormat(clock, durationFormat);
 
         final String formattedMessage = format.apply(message);
 
-        Assert.assertEquals("User name - Message text (13 hours)", formattedMessage);
+        Assert.assertEquals("Message text (13 hours)", formattedMessage);
     }
 }
