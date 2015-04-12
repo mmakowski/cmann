@@ -14,8 +14,8 @@ public final class CmAnnMessageFormat implements MessageFormat {
         this.durationFormat = durationFormat;
     }
 
-    public String format(final Message message) {
-        final String formattedAge = durationFormat.format(Duration.between(message.timestamp, clock.currentInstant()));
+    public String apply(final Message message) {
+        final String formattedAge = durationFormat.apply(Duration.between(message.timestamp, clock.currentInstant()));
         return message.userName + " - " + message.message + " (" + formattedAge + ")";
     }
 }

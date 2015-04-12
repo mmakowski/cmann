@@ -16,8 +16,8 @@ public final class OutputWritingResultSinkTest {
         final String formattedMessage2 = "Bob - Second message (1 minute)";
 
         final MessageFormat format = Mockito.mock(MessageFormat.class);
-        Mockito.when(format.format(message1)).thenReturn(formattedMessage1);
-        Mockito.when(format.format(message2)).thenReturn(formattedMessage2);
+        Mockito.when(format.apply(message1)).thenReturn(formattedMessage1);
+        Mockito.when(format.apply(message2)).thenReturn(formattedMessage2);
 
         final OutputWriter out = Mockito.mock(OutputWriter.class);
 

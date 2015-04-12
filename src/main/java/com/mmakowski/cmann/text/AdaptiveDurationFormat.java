@@ -4,7 +4,7 @@ import java.time.Duration;
 
 public final class AdaptiveDurationFormat implements DurationFormat {
     @Override
-    public String format(final Duration duration) {
+    public String apply(final Duration duration) {
         final String formatted;
         if (isShorter(duration, Duration.ofSeconds(1))) formatted = "now";
         else if (!isShorter(duration, Duration.ofDays(1))) formatted = "ages ago";

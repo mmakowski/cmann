@@ -46,6 +46,6 @@ public final class AdaptiveDurationFormatTest {
     }
 
     private static void assertFormat(final String expected, final Duration duration) {
-        Assert.assertEquals(expected, new AdaptiveDurationFormat().format(duration));
+        Assert.assertEquals(expected, new AdaptiveDurationFormat().apply(duration));
     }
 }

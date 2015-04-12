@@ -15,6 +15,6 @@ public final class OutputWritingResultSink implements ResultSink {
 
     @Override
     public void receive(final Result result) {
-        for (final Message message : result.messages) out.writeLine(messageFormat.format(message));
+        for (final Message message : result.messages) out.writeLine(messageFormat.apply(message));
     }
 }

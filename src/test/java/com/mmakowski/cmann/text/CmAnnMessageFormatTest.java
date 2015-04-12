@@ -20,11 +20,11 @@ public final class CmAnnMessageFormatTest {
 
         final DurationFormat durationFormat = Mockito.mock(DurationFormat.class);
         final String formattedDuration = "13 hours";
-        Mockito.when(durationFormat.format(timeSincePosting)).thenReturn(formattedDuration);
+        Mockito.when(durationFormat.apply(timeSincePosting)).thenReturn(formattedDuration);
 
         final CmAnnMessageFormat format = new CmAnnMessageFormat(clock, durationFormat);
 
-        final String formattedMessage = format.format(message);
+        final String formattedMessage = format.apply(message);
 
         Assert.assertEquals("User name - Message text (13 hours)", formattedMessage);
     }
