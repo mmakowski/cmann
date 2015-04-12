@@ -1,8 +1,8 @@
 package com.mmakowski.cmann.acceptance;
 
+import com.google.common.collect.ImmutableList;
 import com.mmakowski.cmann.text.InputReader;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -21,7 +21,7 @@ final class TimeoutBasedAvailableLinesReader implements AutoCloseable {
 
     public List<String> readAvailableLines(final InputReader reader) {
         boolean endOfAvailableOutputReached = false;
-        final List<String> readLines = new ArrayList<>();
+        final ImmutableList.Builder<String> readLines = ImmutableList.builder();
         while (!endOfAvailableOutputReached) {
             try {
                 final Future<String> future = asyncExecutor.submit((Callable<String>) reader::blockingReadLine);
@@ -34,7 +34,7 @@ final class TimeoutBasedAvailableLinesReader implements AutoCloseable {
                 asyncExecutor = Executors.newSingleThreadExecutor();
             }
         }
-        return readLines;
+        return readLines.build();
     }
 
     @Override
