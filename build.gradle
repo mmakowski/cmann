@@ -17,7 +17,7 @@ test {
   }
 }
 
-task acceptanceTest(type: Test) {
+task acceptanceTest(type: Test, dependsOn: assemble) {
   useJUnit {
     includeCategories 'com.mmakowski.cmann.testcategories.AcceptanceTest'
   }
