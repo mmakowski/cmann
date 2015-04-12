@@ -43,7 +43,7 @@ public final class CmAnnAcceptanceTests {
         private final BlockingBufferedInputOutput in = new BlockingBufferedInputOutput();
         private final BlockingBufferedInputOutput out = new BlockingBufferedInputOutput();
         private final ExecutorService asyncExecutor = Executors.newSingleThreadExecutor();
-        private final TimeoutBasedAvailableLinesReader linesReader = TimeoutBasedAvailableLinesReader.withReadTimeoutMs(50);
+        private final TimeoutBasedAvailableLinesReader linesReader = TimeoutBasedAvailableLinesReader.withReadTimeoutMs(100);
 
         public Fixture() {
             final CmAnnAssembly assembly = new CmAnnAssembly(in.reader, out.writer, clock);
@@ -56,15 +56,7 @@ public final class CmAnnAcceptanceTests {
 
         public void assertOutput(final String... expectedLines) {
             final List<String> actualLines = linesReader.readAvailableLines(out.reader);
-            final List<String> expectedLinesWithLineEndings = separateWithLineEndings(expectedLines);
-            Assert.assertEquals(expectedLinesWithLineEndings, actualLines);
-        }
-
-        private List<String> separateWithLineEndings(final String[] lines) {
-            final ImmutableList.Builder<String> builder = ImmutableList.builder();
-            for (int i = 0; i < lines.length - 1; i++) builder.add(lines[i] += "\n");
-            if (lines.length > 0) builder.add(lines[lines.length - 1]);
-            return builder.build();
+            Assert.assertEquals(ImmutableList.copyOf(expectedLines), actualLines);
         }
 
         public void advanceClock(final Duration duration) {

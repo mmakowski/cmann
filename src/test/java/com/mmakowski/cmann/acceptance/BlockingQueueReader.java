@@ -13,6 +13,6 @@ final class BlockingQueueReader implements InputReader {
 
     @Override
     public String blockingReadLine() throws InterruptedException {
-        return queue.take();
+        return queue.take().replace("\n", "");
     }
 }

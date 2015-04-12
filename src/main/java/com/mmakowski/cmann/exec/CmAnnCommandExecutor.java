@@ -1,14 +1,16 @@
 package com.mmakowski.cmann.exec;
 
+import com.google.common.collect.ImmutableList;
 import com.mmakowski.cmann.model.*;
 import com.mmakowski.util.Clock;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class CmAnnCommandExecutor implements CommandExecutor {
     private final Clock clock;
-    private final List<Message> messages = new ArrayList<>();
+    private final Map<String, List<Message>> messagesPerUser = new HashMap<>();
 
     public CmAnnCommandExecutor(final Clock clock) {
         this.clock = clock;
@@ -21,11 +23,18 @@ public final class CmAnnCommandExecutor implements CommandExecutor {
     }
 
     private Result execute(final Posting posting) {
-        messages.add(new Message(posting.userName, posting.message, clock.currentInstant()));
+        final ImmutableList.Builder<Message> updatedMessages = ImmutableList.builder();
+        updatedMessages.addAll(messagesBy(posting.userName));
+        updatedMessages.add(new Message(posting.userName, posting.message, clock.currentInstant()));
+        messagesPerUser.put(posting.userName, updatedMessages.build());
         return Result.EMPTY;
     }
 
     private Result execute(final Reading reading) {
-        return Result.withMessages(messages);
+        return Result.withMessages(messagesBy(reading.userName));
+    }
+
+    private Iterable<Message> messagesBy(final String userName) {
+        return messagesPerUser.getOrDefault(userName, ImmutableList.of());
     }
 }
