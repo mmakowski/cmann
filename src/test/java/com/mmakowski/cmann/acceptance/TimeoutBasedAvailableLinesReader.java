@@ -2,21 +2,21 @@ package com.mmakowski.cmann.acceptance;
 
 import com.google.common.collect.ImmutableList;
 import com.mmakowski.cmann.text.InputReader;
+import com.mmakowski.util.TimingOut;
 
+import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.TimeoutException;
 
-final class TimeoutBasedAvailableLinesReader implements AutoCloseable {
-    private final int maxLineReadDelayMs;
+final class TimeoutBasedAvailableLinesReader {
+    private final Duration maxLineReadDelay;
 
-    private ExecutorService asyncExecutor = Executors.newSingleThreadExecutor();
-
-    public static TimeoutBasedAvailableLinesReader withReadTimeoutMs(final int maxLineReadDelayMs) {
-        return new TimeoutBasedAvailableLinesReader(maxLineReadDelayMs);
+    public static TimeoutBasedAvailableLinesReader withReadTimeout(final Duration maxLineReadDelay) {
+        return new TimeoutBasedAvailableLinesReader(maxLineReadDelay);
     }
 
-    private TimeoutBasedAvailableLinesReader(final int maxLineReadDelayMs) {
-        this.maxLineReadDelayMs = maxLineReadDelayMs;
+    private TimeoutBasedAvailableLinesReader(final Duration maxLineReadDelay) {
+        this.maxLineReadDelay = maxLineReadDelay;
     }
 
     public List<String> readAvailableLines(final InputReader reader) {
@@ -24,21 +24,11 @@ final class TimeoutBasedAvailableLinesReader implements AutoCloseable {
         final ImmutableList.Builder<String> readLines = ImmutableList.builder();
         while (!endOfAvailableOutputReached) {
             try {
-                final Future<String> future = asyncExecutor.submit((Callable<String>) reader::blockingReadLine);
-                readLines.add(future.get(maxLineReadDelayMs, TimeUnit.MILLISECONDS));
-            } catch (InterruptedException | ExecutionException e) {
-                throw new AssertionError(e);
+                readLines.add(TimingOut.execute((TimingOut.Block<String>) reader::blockingReadLine, maxLineReadDelay));
             } catch (final TimeoutException e) {
                 endOfAvailableOutputReached = true;
-                ExecutorServices.shutdownSynchronously(asyncExecutor);
-                asyncExecutor = Executors.newSingleThreadExecutor();
             }
         }
         return readLines.build();
-    }
-
-    @Override
-    public void close() {
-        ExecutorServices.shutdownSynchronously(asyncExecutor);
     }
 }

@@ -1,8 +1,8 @@
 package com.mmakowski.cmann.smoke;
 
-import com.google.common.collect.ImmutableList;
 import com.mmakowski.cmann.CmAnnApp;
 import com.mmakowski.cmann.testcategories.SmokeTest;
+import com.mmakowski.util.TimingOut;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -13,13 +13,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Category(SmokeTest.class)
 public final class CmAnnSmokeTest {
     @Test
     public void reactsToCommandsFromCommandLine() throws IOException, InterruptedException {
+        final Duration lineReadTimeout = Duration.ofMillis(100);
         final Process process = startApp();
         try {
             final PrintWriter inputWriter = new PrintWriter(process.getOutputStream());
@@ -27,8 +26,8 @@ public final class CmAnnSmokeTest {
             inputWriter.println("Alice -> smoke test");
             inputWriter.println("Alice");
             eventually(() -> {
-                final List<String> outputLines = outputReader.lines().collect(Collectors.<String>toList());
-                Assert.assertEquals(ImmutableList.of("smoke test"), outputLines);
+                final String outputLine = TimingOut.execute((TimingOut.Block<String>) outputReader::readLine, lineReadTimeout);
+                Assert.assertEquals("smoke test", outputLine);
             });
         } finally {
             process.destroyForcibly();
@@ -48,13 +47,13 @@ public final class CmAnnSmokeTest {
     private static final Duration TIMEOUT = Duration.ofSeconds(1);
     private static final Duration RETRY_DELAY = Duration.ofMillis(100);
 
-    private static void eventually(final Runnable block) throws InterruptedException {
+    private static void eventually(final Block block) throws InterruptedException {
         boolean succeeded = false;
         Throwable lastFailure = null;
         final Instant startTime = Instant.now();
         while (!succeeded && Instant.now().isBefore(startTime.plus(TIMEOUT))) {
             try {
-                block.run();
+                block.execute();
                 succeeded = true;
             } catch (final Throwable t) {
                 lastFailure = t;
@@ -66,4 +65,10 @@ public final class CmAnnSmokeTest {
                                      lastFailure);
         }
     }
+
+    private interface Block {
+        void execute() throws Exception;
+    }
 }
+
+

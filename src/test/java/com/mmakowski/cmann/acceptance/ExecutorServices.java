@@ -11,7 +11,7 @@ final class ExecutorServices {
     public static void shutdownSynchronously(final ExecutorService executor) {
         executor.shutdownNow();
         try {
-            Assert.assertTrue("reader did not terminate within one second", executor.awaitTermination(1, TimeUnit.SECONDS));
+            Assert.assertTrue("task did not terminate within one second", executor.awaitTermination(1, TimeUnit.SECONDS));
         } catch (final InterruptedException e1) {
             throw new AssertionError(e1);
         }

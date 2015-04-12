@@ -43,7 +43,7 @@ public final class CmAnnAcceptanceTests {
         private final BlockingBufferedInputOutput in = new BlockingBufferedInputOutput();
         private final BlockingBufferedInputOutput out = new BlockingBufferedInputOutput();
         private final ExecutorService asyncExecutor = Executors.newSingleThreadExecutor();
-        private final TimeoutBasedAvailableLinesReader linesReader = TimeoutBasedAvailableLinesReader.withReadTimeoutMs(100);
+        private final TimeoutBasedAvailableLinesReader linesReader = TimeoutBasedAvailableLinesReader.withReadTimeout(Duration.ofMillis(100));
 
         public Fixture() {
             final CmAnnAssembly assembly = new CmAnnAssembly(in.reader, out.writer, clock);
@@ -65,7 +65,6 @@ public final class CmAnnAcceptanceTests {
 
         @Override
         public void close() {
-            linesReader.close();
             ExecutorServices.shutdownSynchronously(asyncExecutor);
         }
     }
