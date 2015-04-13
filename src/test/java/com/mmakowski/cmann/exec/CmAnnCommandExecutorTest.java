@@ -10,7 +10,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
@@ -20,33 +19,6 @@ public final class CmAnnCommandExecutorTest {
         final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(Mockito.mock(Store.class), new TestClock());
         final Result postingResult = executor.execute(testPosting);
         Assert.assertEquals(Result.EMPTY, postingResult);
-    }
-
-    @Ignore
-    @Test
-    public void readingAfterPostingOutputsPostedMessage() {
-        final TestClock clock = TestClock.withCurrentInstant(timeOfPosting);
-        final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(Mockito.mock(Store.class), clock);
-
-        executor.execute(testPosting);
-        clock.advance(Duration.ofMinutes(3));
-        final Result readingResult = executor.execute(new Reading(testPosting.userName));
-
-        Assert.assertEquals(Result.withMessages(toMessage.apply(testPosting)), readingResult);
-    }
-
-    @Ignore
-    @Test
-    public void readingOutputsAllMessagesOfSpecifiedUserInReverseOrderOfPosting() {
-        final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(Mockito.mock(Store.class), TestClock.withCurrentInstant(timeOfPosting));
-
-        for (final Posting posting : Iterables.concat(alicesPostings, bobsPostings)) executor.execute(posting);
-
-        final Result readingResult = executor.execute(new Reading(alice));
-
-        final Iterable<Message> reversedAlicesMessages = ImmutableList.copyOf(Iterables.transform(alicesPostings, toMessage)).reverse();
-        final Result expectedResult = Result.withMessages(reversedAlicesMessages);
-        Assert.assertEquals(expectedResult, readingResult);
     }
 
     @Test

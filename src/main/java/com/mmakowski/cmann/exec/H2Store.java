@@ -36,7 +36,7 @@ public final class H2Store implements Store, AutoCloseable {
     @Override
     public List<Message> messagesByUser(final String userName) {
         return sqlExceptionToRuntimeException(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("select message, message_ts from messages where user_name = ?")) {
+            try (PreparedStatement statement = connection.prepareStatement("select message, message_ts from messages where user_name = ? order by message_ts desc")) {
                 statement.setString(1, userName);
                 try (ResultSet result = statement.executeQuery()) {
                     final ImmutableList.Builder<Message> builder = ImmutableList.builder();
@@ -62,8 +62,12 @@ public final class H2Store implements Store, AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
-        connection.close();
+    public void close() {
+        try {
+            connection.close();
+        } catch (final SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static <T> T sqlExceptionToRuntimeException(final DatabaseOperation<T> operation) {
