@@ -11,7 +11,8 @@ public final class CmAnnAssembly {
         final CommandParser parser = new TextSplittingCommandParser();
         final CommandSource source = new InputParsingCommandSource(out, in, parser);
 
-        final CommandExecutor executor = new CmAnnCommandExecutor(null, clock);
+        final Store store = new H2Store();
+        final CommandExecutor executor = new CmAnnCommandExecutor(store, clock);
 
         final DurationFormat durationFormat = new AdaptiveAgeFormat();
         final MessageFormat messageFormat = new ReadingMessageFormat(clock, durationFormat);
