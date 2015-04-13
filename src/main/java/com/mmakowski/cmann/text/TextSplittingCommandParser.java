@@ -1,10 +1,6 @@
 package com.mmakowski.cmann.text;
 
-import com.mmakowski.cmann.model.Command;
-import com.mmakowski.cmann.model.Following;
-import com.mmakowski.cmann.model.Posting;
-import com.mmakowski.cmann.model.Reading;
-import com.mmakowski.cmann.text.CommandParser;
+import com.mmakowski.cmann.model.*;
 
 public final class TextSplittingCommandParser implements CommandParser {
     public Command parse(final String inputLine) {
@@ -24,6 +20,8 @@ public final class TextSplittingCommandParser implements CommandParser {
                 return new Posting(userName, argument);
             case "follows":
                 return new Following(userName, argument);
+            case "wall":
+                return new Wall(userName);
             default:
                 throw new RuntimeException("unsupported operation: " + operation);
         }
