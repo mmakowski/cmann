@@ -52,20 +52,33 @@ public final class H2Store implements Store, AutoCloseable {
 
     @Override
     public void insertSubsription(final String follower, final String followee) {
-
+        sqlExceptionToRuntimeException(() -> {
+            try (PreparedStatement statement = connection.prepareStatement("insert into subscriptions (follower, followee) values (?, ?)")) {
+                statement.setString(1, follower);
+                statement.setString(2, followee);
+                statement.execute();
+                return null;
+            }
+        });
     }
 
     @Override
     public List<Message> wallMessages(final String userName) {
         return sqlExceptionToRuntimeException(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("select message, message_ts from messages where user_name = ? order by message_ts desc")) {
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "select user_name, message, message_ts from messages where user_name = ? " +
+                    "union " +
+                    "select m.user_name, m.message, m.message_ts from messages m, subscriptions s " +
+                    "where s.follower = ? and s.followee = m.user_name " +
+                    "order by message_ts desc")) {
                 statement.setString(1, userName);
+                statement.setString(2, userName);
                 try (ResultSet result = statement.executeQuery()) {
                     final ImmutableList.Builder<Message> builder = ImmutableList.builder();
                     while (result.next())
-                        builder.add(new Message(userName,
-                                result.getString("message"),
-                                Instant.ofEpochMilli(result.getTimestamp("message_ts").getTime())));
+                        builder.add(new Message(result.getString("user_name"),
+                                                result.getString("message"),
+                                                Instant.ofEpochMilli(result.getTimestamp("message_ts").getTime())));
                     return builder.build();
                 }
             }
@@ -102,6 +115,10 @@ public final class H2Store implements Store, AutoCloseable {
             "  user_name varchar not null," +
             "  message varchar not null," +
             "  message_ts timestamp not null" +
+            ")",
+            "create table subscriptions (" +
+            "  follower varchar not null," +
+            "  followee varchar not null" +
             ")"
     );
 

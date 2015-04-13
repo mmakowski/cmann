@@ -2,11 +2,12 @@ package com.mmakowski.cmann.exec;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.mmakowski.cmann.model.*;
+import com.mmakowski.cmann.model.Following;
+import com.mmakowski.cmann.model.Message;
+import com.mmakowski.cmann.model.Posting;
+import com.mmakowski.cmann.model.Result;
 import com.mmakowski.util.TestClock;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -26,23 +27,6 @@ public final class CmAnnCommandExecutorTest {
         final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(Mockito.mock(Store.class), new TestClock());
         final Result followingResult = executor.execute(new Following("Charlie", "Alice"));
         Assert.assertEquals(Result.EMPTY, followingResult);
-    }
-
-    @Ignore
-    @Test
-    public void wallOutputsAllSubscribedMessagesInReverseOrderOfPosting() {
-        final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(Mockito.mock(Store.class), TestClock.withCurrentInstant(timeOfPosting));
-
-        final Iterable<Posting> alicesAndBobsPostings = Iterables.concat(alicesPostings, bobsPostings);
-        for (final Posting posting : alicesAndBobsPostings) executor.execute(posting);
-        executor.execute(new Posting("SomeoneElse", "message that should not appear in the wall"));
-
-        executor.execute(new Following(alice, bob));
-        final Result wallResult = executor.execute(new Wall(alice));
-
-        final Iterable<Message> alicesAndBobsMessagesReversed = ImmutableList.copyOf(Iterables.transform(alicesAndBobsPostings, toMessage)).reverse();
-        final Result expectedResult = Result.withMessages(alicesAndBobsMessagesReversed);
-        Assert.assertEquals(expectedResult, wallResult);
     }
 
     private static final String alice = "Alice";
