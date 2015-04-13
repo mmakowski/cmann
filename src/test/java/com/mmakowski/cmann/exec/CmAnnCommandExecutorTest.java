@@ -3,10 +3,7 @@ package com.mmakowski.cmann.exec;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.mmakowski.cmann.model.Message;
-import com.mmakowski.cmann.model.Posting;
-import com.mmakowski.cmann.model.Reading;
-import com.mmakowski.cmann.model.Result;
+import com.mmakowski.cmann.model.*;
 import com.mmakowski.util.TestClock;
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,6 +43,13 @@ public final class CmAnnCommandExecutorTest {
         final Iterable<Message> reversedAlicesMessages = ImmutableList.copyOf(Iterables.transform(alicesPostings, toMessage)).reverse();
         final Result expectedResult = Result.withMessages(reversedAlicesMessages);
         Assert.assertEquals(expectedResult, readingResult);
+    }
+
+    @Test
+    public void followingResultsInNoOutput() {
+        final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(new TestClock());
+        final Result followingResult = executor.execute(new Following("Charlie", "Alice"));
+        Assert.assertEquals(Result.EMPTY, followingResult);
     }
 
     private static final String alice = "Alice";
