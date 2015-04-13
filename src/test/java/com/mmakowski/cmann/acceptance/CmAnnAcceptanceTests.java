@@ -38,6 +38,38 @@ public final class CmAnnAcceptanceTests {
         }
     }
 
+    @Test
+    public void wallDisplaysPostsOfUsersToWhichWeAre() {
+        try (Fixture test = new Fixture()) {
+            test.assertOutput("> ");
+            test.input("Alice -> I love the weather today");
+            test.assertOutput("> ");
+            test.advanceClock(Duration.ofMinutes(3));
+            test.input("Bob -> Damn! We lost!");
+            test.assertOutput("> ");
+            test.advanceClock(Duration.ofMinutes(1));
+            test.input("Bob -> Good game though.");
+            test.assertOutput("> ");
+            test.input("Charlie -> I'm in New York today! Anyone want to have a coffee?");
+            test.assertOutput("> ");
+            test.input("Charlie follows Alice");
+            test.assertOutput("> ");
+            test.advanceClock(Duration.ofSeconds(2));
+            test.input("Charlie wall");
+            test.assertOutput("Charlie - I'm in New York today! Anyone want to have a coffee? (2 seconds ago)",
+                              "Alice - I love the weather today (5 minutes ago)",
+                              "> ");
+            test.input("Charlie follows Bob");
+            test.assertOutput("> ");
+            test.input("Charlie wall");
+            test.assertOutput("Charlie - I'm in New York today! Anyone want to have a coffee? (2 seconds ago)",
+                              "Bob -> Good game though. (1 minute ago)",
+                              "Bob -> Damn! We lost! (2 minutes ago)",
+                              "Alice - I love the weather today (5 minutes ago)",
+                              "> ");
+        }
+    }
+
     private static final class Fixture implements AutoCloseable {
         private final TestClock clock = new TestClock();
         private final BlockingBufferedInputOutput in = new BlockingBufferedInputOutput();
