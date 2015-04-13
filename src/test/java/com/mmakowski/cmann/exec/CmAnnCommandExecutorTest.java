@@ -30,20 +30,6 @@ public final class CmAnnCommandExecutorTest {
 
     @Ignore
     @Test
-    public void wallOutputsOwnMessagesInReverseOrderOfPosting() {
-        final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(Mockito.mock(Store.class), TestClock.withCurrentInstant(timeOfPosting));
-
-        for (final Posting posting : Iterables.concat(alicesPostings, bobsPostings)) executor.execute(posting);
-
-        final Result readingResult = executor.execute(new Wall(alice));
-
-        final Iterable<Message> reversedAlicesMessages = ImmutableList.copyOf(Iterables.transform(alicesPostings, toMessage)).reverse();
-        final Result expectedResult = Result.withMessages(reversedAlicesMessages);
-        Assert.assertEquals(expectedResult, readingResult);
-    }
-
-    @Ignore
-    @Test
     public void wallOutputsAllSubscribedMessagesInReverseOrderOfPosting() {
         final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(Mockito.mock(Store.class), TestClock.withCurrentInstant(timeOfPosting));
 

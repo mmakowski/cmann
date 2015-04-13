@@ -3,6 +3,7 @@ package com.mmakowski.cmann.exec;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.mmakowski.cmann.model.Message;
+import com.mmakowski.cmann.model.Posting;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,12 +23,16 @@ public final class H2StoreTest {
     @Test
     public void readingReturnsAllMessagesOfSpecifiedUserInReverseOrderOfPostingTime() {
         try (H2Store store = new H2Store()) {
-            for (final Message message : Iterables.concat(alicesMessages, bobsMessages)) store.insertMessage(message);
+            for (final Message message : alicesAndBobsMessages) store.insertMessage(message);
+            Assert.assertEquals(alicesMessages.reverse(), store.messagesByUser(alice));
+        }
+    }
 
-            final List<Message> readingResult = store.messagesByUser(alice);
-
-            final Iterable<Message> reversedAlicesMessages = alicesMessages.reverse();
-            Assert.assertEquals(reversedAlicesMessages, readingResult);
+    @Test
+    public void wallOutputsOwnMessagesInReverseOrderOfPosting() {
+        try (H2Store store = new H2Store()) {
+            for (final Message message : alicesAndBobsMessages) store.insertMessage(message);
+            Assert.assertEquals(alicesMessages.reverse(), store.wallMessages(alice));
         }
     }
 
@@ -42,5 +47,6 @@ public final class H2StoreTest {
     private static final ImmutableList<Message> bobsMessages = ImmutableList.of(
             new Message(bob, "Damn! We lost!", timeOfInitialPosting.plusSeconds(2))
     );
+    final Iterable<Message> alicesAndBobsMessages = Iterables.concat(alicesMessages, bobsMessages);
     private static final Message testMessage = alicesMessages.get(0);
 }

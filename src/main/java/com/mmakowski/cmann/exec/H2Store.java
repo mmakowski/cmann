@@ -47,8 +47,7 @@ public final class H2Store implements Store, AutoCloseable {
                     return builder.build();
                 }
             }
-    });
-
+        });
     }
 
     @Override
@@ -58,7 +57,19 @@ public final class H2Store implements Store, AutoCloseable {
 
     @Override
     public List<Message> wallMessages(final String userName) {
-        return null;
+        return sqlExceptionToRuntimeException(() -> {
+            try (PreparedStatement statement = connection.prepareStatement("select message, message_ts from messages where user_name = ? order by message_ts desc")) {
+                statement.setString(1, userName);
+                try (ResultSet result = statement.executeQuery()) {
+                    final ImmutableList.Builder<Message> builder = ImmutableList.builder();
+                    while (result.next())
+                        builder.add(new Message(userName,
+                                result.getString("message"),
+                                Instant.ofEpochMilli(result.getTimestamp("message_ts").getTime())));
+                    return builder.build();
+                }
+            }
+        });
     }
 
     @Override
