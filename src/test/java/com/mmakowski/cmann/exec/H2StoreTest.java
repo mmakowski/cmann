@@ -63,6 +63,6 @@ public final class H2StoreTest {
     private static final ImmutableList<Message> bobsMessages = ImmutableList.of(
             new Message(bob, "Damn! We lost!", timeOfInitialPosting.plusMillis(1999))
     );
-    final Iterable<Message> alicesAndBobsMessages = Iterables.concat(alicesMessages, bobsMessages);
+    private static final Iterable<Message> alicesAndBobsMessages = Iterables.concat(alicesMessages, bobsMessages);
     private static final Message testMessage = alicesMessages.get(0);
 }

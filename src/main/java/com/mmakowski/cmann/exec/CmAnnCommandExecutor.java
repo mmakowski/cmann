@@ -26,18 +26,15 @@ public final class CmAnnCommandExecutor implements CommandExecutor {
     }
 
     private Result execute(final Reading reading) {
-        return Result.withMessages(messagesBy(reading.userName));
+        return Result.withMessages(store.messagesByUser(reading.userName));
     }
 
     private Result execute(final Following following) {
+        store.insertSubsription(following.follower, following.followee);
         return Result.EMPTY;
     }
 
     private Result execute(final Wall wall) {
-        return Result.withMessages(messagesBy(wall.userName));
-    }
-
-    private Iterable<Message> messagesBy(final String userName) {
-        return store.messagesByUser(userName);
+        return Result.withMessages(store.wallMessages(wall.userName));
     }
 }

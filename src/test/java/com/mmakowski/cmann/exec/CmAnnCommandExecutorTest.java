@@ -1,11 +1,7 @@
 package com.mmakowski.cmann.exec;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
-import com.mmakowski.cmann.model.Following;
-import com.mmakowski.cmann.model.Message;
-import com.mmakowski.cmann.model.Posting;
-import com.mmakowski.cmann.model.Result;
+import com.mmakowski.cmann.model.*;
 import com.mmakowski.util.TestClock;
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,30 +12,57 @@ import java.util.List;
 
 public final class CmAnnCommandExecutorTest {
     @Test
-    public void postingResultsInNoOutput() {
-        final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(Mockito.mock(Store.class), new TestClock());
+    public void postingInsertsMessageIntoTheStoreAndProducesNoOutput() {
+        final Store store = Mockito.mock(Store.class);
+        final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(store, TestClock.withCurrentInstant(timeOfPosting));
+
         final Result postingResult = executor.execute(testPosting);
+
+        Mockito.verify(store, Mockito.times(1)).insertMessage(testMessage);
+        Mockito.verifyNoMoreInteractions(store);
         Assert.assertEquals(Result.EMPTY, postingResult);
     }
 
     @Test
-    public void followingResultsInNoOutput() {
-        final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(Mockito.mock(Store.class), new TestClock());
-        final Result followingResult = executor.execute(new Following("Charlie", "Alice"));
+    public void readingProducesMessagesBySuppliedUserProvidedByTheStore() {
+        final Store store = Mockito.mock(Store.class);
+        final List<Message> messagesByAlice = ImmutableList.of(
+                new Message(alice, "message 1", timeOfPosting.plusSeconds(1)),
+                new Message(alice, "message 2", timeOfPosting)
+        );
+        Mockito.when(store.messagesByUser(alice)).thenReturn(messagesByAlice);
+        final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(store, new TestClock());
+
+        Assert.assertEquals(Result.withMessages(messagesByAlice), executor.execute(new Reading(alice)));
+    }
+
+    @Test
+    public void followingInsertsSubscriptionIntoTheStoreAndProducesNoOutput() {
+        final Store store = Mockito.mock(Store.class);
+        final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(store, new TestClock());
+
+        final Result followingResult = executor.execute(new Following("Charlie", alice));
+
+        Mockito.verify(store, Mockito.times(1)).insertSubsription("Charlie", alice);
+        Mockito.verifyNoMoreInteractions(store);
         Assert.assertEquals(Result.EMPTY, followingResult);
     }
 
+    @Test
+    public void wallProducesMessagesFromSuppliedUsersWallProvidedByTheStore() {
+        final Store store = Mockito.mock(Store.class);
+        final List<Message> messagesFromAlicesWall = ImmutableList.of(
+                new Message(alice, "message 1", timeOfPosting.plusSeconds(1)),
+                new Message("Bob", "message 2", timeOfPosting)
+        );
+        Mockito.when(store.wallMessages(alice)).thenReturn(messagesFromAlicesWall);
+        final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(store, new TestClock());
+
+        Assert.assertEquals(Result.withMessages(messagesFromAlicesWall), executor.execute(new Wall(alice)));
+    }
+
     private static final String alice = "Alice";
-    private static final String bob = "Bob";
-    private static final List<Posting> alicesPostings = ImmutableList.of(
-            new Posting(alice, "I love the weather today"),
-            new Posting(alice, "And today as well"),
-            new Posting(alice, "What was the score?")
-    );
-    private static final List<Posting> bobsPostings = ImmutableList.of(
-            new Posting(bob, "Damn! We lost!")
-    );
-    private static final Posting testPosting = alicesPostings.get(0);
+    private static final Posting testPosting = new Posting(alice, "I love the weather today");
     private static final Instant timeOfPosting = Instant.parse("2015-04-10T23:45:00Z");
-    private static final Function<Posting, Message> toMessage = posting -> new Message(posting.userName, posting.message, timeOfPosting);
+    private static final Message testMessage = new Message(testPosting.userName, testPosting.message, timeOfPosting);
 }
