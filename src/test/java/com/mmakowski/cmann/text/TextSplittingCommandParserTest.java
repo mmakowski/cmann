@@ -1,6 +1,7 @@
 package com.mmakowski.cmann.text;
 
 import com.mmakowski.cmann.model.Command;
+import com.mmakowski.cmann.model.Following;
 import com.mmakowski.cmann.model.Posting;
 import com.mmakowski.cmann.model.Reading;
 import org.junit.Assert;
@@ -15,6 +16,11 @@ public final class TextSplittingCommandParserTest {
     @Test
     public void parsesReading() {
         assertParsesTo(new Reading("Charlie"), "Charlie");
+    }
+
+    @Test
+    public void parsesFollowing() {
+        assertParsesTo(new Following("Charlie", "Alice"), "Charlie follows Alice");
     }
 
     private static void assertParsesTo(final Command expected, final String input) {
