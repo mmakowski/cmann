@@ -33,7 +33,7 @@ public final class CmAnnCommandExecutorTest {
     }
 
     @Test
-    public void readingOutputsAllMessagesOfSpecifiedUserInInverseOrderOfPosting() {
+    public void readingOutputsAllMessagesOfSpecifiedUserInReverseOrderOfPosting() {
         final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(TestClock.withCurrentInstant(timeOfPosting));
 
         for (final Posting posting : Iterables.concat(alicesPostings, bobsPostings)) executor.execute(posting);
@@ -50,6 +50,19 @@ public final class CmAnnCommandExecutorTest {
         final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(new TestClock());
         final Result followingResult = executor.execute(new Following("Charlie", "Alice"));
         Assert.assertEquals(Result.EMPTY, followingResult);
+    }
+
+    @Test
+    public void wallOutputOwnMessagesInReverseOrderOfPosting() {
+        final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(TestClock.withCurrentInstant(timeOfPosting));
+
+        for (final Posting posting : Iterables.concat(alicesPostings, bobsPostings)) executor.execute(posting);
+
+        final Result readingResult = executor.execute(new Wall(alice));
+
+        final Iterable<Message> reversedAlicesMessages = ImmutableList.copyOf(Iterables.transform(alicesPostings, toMessage)).reverse();
+        final Result expectedResult = Result.withMessages(reversedAlicesMessages);
+        Assert.assertEquals(expectedResult, readingResult);
     }
 
     private static final String alice = "Alice";

@@ -20,6 +20,7 @@ public final class CmAnnCommandExecutor implements CommandExecutor {
         if (command instanceof Posting) return execute((Posting) command);
         else if (command instanceof Reading) return execute((Reading) command);
         else if (command instanceof Following) return execute((Following) command);
+        else if (command instanceof Wall) return execute((Wall) command);
         else throw new UnsupportedOperationException("Unsupported command: " + command);
     }
 
@@ -37,6 +38,10 @@ public final class CmAnnCommandExecutor implements CommandExecutor {
 
     private Result execute(final Following following) {
         return Result.EMPTY;
+    }
+
+    private Result execute(final Wall wall) {
+        return Result.withMessages(messagesBy(wall.userName));
     }
 
     private Iterable<Message> messagesBy(final String userName) {
