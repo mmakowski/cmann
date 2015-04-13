@@ -1,6 +1,9 @@
 apply plugin: 'java'
+apply plugin: 'application'
 
 sourceCompatibility = 1.8
+
+mainClassName = "com.mmakowski.cmann.CmAnnApp"
 
 repositories { mavenCentral() }
 
@@ -31,3 +34,7 @@ task smokeTest(type: Test, dependsOn: assemble) {
 }
 
 build.dependsOn acceptanceTest, smokeTest
+
+run {
+  standardInput = System.in
+}
