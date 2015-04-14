@@ -15,8 +15,9 @@ public final class CmAnnAssembly {
         final CommandExecutor executor = new CmAnnCommandExecutor(store, clock);
 
         final DurationFormat durationFormat = new AdaptiveAgeFormat();
-        final MessageFormat messageFormat = new ReadingMessageFormat(clock, durationFormat);
-        final ResultSink sink = new OutputWritingResultSink(out, messageFormat);
+        final MessageFormat readingFormat = new ReadingMessageFormat(clock, durationFormat);
+        final MessageFormat wallFormat = new WallMessageFormat(clock, durationFormat);
+        final ResultSink sink = new OutputWritingResultSink(out, readingFormat, wallFormat);
 
         repl = new Repl(source, executor, sink);
     }

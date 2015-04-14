@@ -1,5 +1,9 @@
 package com.mmakowski.cmann.model;
 
+import com.google.common.collect.ImmutableList;
+
+import java.util.List;
+
 public final class Results {
     private Results() {}
 
@@ -9,6 +13,11 @@ public final class Results {
         @Override
         public String toString() {
             return "EmptyResult{}";
+        }
+
+        @Override
+        public List<Message> messages() {
+            return ImmutableList.of();
         }
     }
 }

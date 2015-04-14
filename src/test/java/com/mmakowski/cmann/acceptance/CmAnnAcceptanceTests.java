@@ -50,6 +50,7 @@ public final class CmAnnAcceptanceTests {
             test.advanceClock(Duration.ofMinutes(1));
             test.input("Bob -> Good game though.");
             test.assertOutput("> ");
+            test.advanceClock(Duration.ofMinutes(1));
             test.input("Charlie -> I'm in New York today! Anyone want to have a coffee?");
             test.assertOutput("> ");
             test.input("Charlie follows Alice");
@@ -63,8 +64,8 @@ public final class CmAnnAcceptanceTests {
             test.assertOutput("> ");
             test.input("Charlie wall");
             test.assertOutput("Charlie - I'm in New York today! Anyone want to have a coffee? (2 seconds ago)",
-                              "Bob -> Good game though. (1 minute ago)",
-                              "Bob -> Damn! We lost! (2 minutes ago)",
+                              "Bob - Good game though. (1 minute ago)",
+                              "Bob - Damn! We lost! (2 minutes ago)",
                               "Alice - I love the weather today (5 minutes ago)",
                               "> ");
         }

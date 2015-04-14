@@ -35,6 +35,6 @@ public final class CmAnnCommandExecutor implements CommandExecutor {
     }
 
     private Result execute(final Wall wall) {
-        return ReadingResult.withMessages(store.wallMessages(wall.userName));
+        return WallResult.withMessages(store.wallMessages(wall.userName));
     }
 }

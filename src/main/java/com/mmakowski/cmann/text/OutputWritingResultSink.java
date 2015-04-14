@@ -4,19 +4,22 @@ import com.mmakowski.cmann.exec.ResultSink;
 import com.mmakowski.cmann.model.Message;
 import com.mmakowski.cmann.model.ReadingResult;
 import com.mmakowski.cmann.model.Result;
+import com.mmakowski.cmann.model.WallResult;
 
 public final class OutputWritingResultSink implements ResultSink {
     private final OutputWriter out;
-    private final MessageFormat messageFormat;
+    private final MessageFormat readingFormat;
+    private final MessageFormat wallFormat;
 
-    public OutputWritingResultSink(final OutputWriter out, final MessageFormat messageFormat) {
+    public OutputWritingResultSink(final OutputWriter out, final MessageFormat readingFormat, final MessageFormat wallFormat) {
         this.out = out;
-        this.messageFormat = messageFormat;
+        this.readingFormat = readingFormat;
+        this.wallFormat = wallFormat;
     }
 
     @Override
     public void receive(final Result result) {
-        if (result instanceof ReadingResult)
-            for (final Message message : ((ReadingResult) result).messages) out.writeLine(messageFormat.apply(message));
+        final MessageFormat format = (result instanceof ReadingResult) ? readingFormat : wallFormat;
+        for (final Message message : (result.messages())) out.writeLine(format.apply(message));
     }
 }

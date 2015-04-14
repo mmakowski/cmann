@@ -58,7 +58,7 @@ public final class CmAnnCommandExecutorTest {
         Mockito.when(store.wallMessages(alice)).thenReturn(messagesFromAlicesWall);
         final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(store, new TestClock());
 
-        Assert.assertEquals(ReadingResult.withMessages(messagesFromAlicesWall), executor.execute(new Wall(alice)));
+        Assert.assertEquals(WallResult.withMessages(messagesFromAlicesWall), executor.execute(new Wall(alice)));
     }
 
     private static final String alice = "Alice";

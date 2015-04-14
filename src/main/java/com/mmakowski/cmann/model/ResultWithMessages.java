@@ -3,11 +3,17 @@ package com.mmakowski.cmann.model;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
+import java.util.List;
+
 abstract class ResultWithMessages implements Result {
-    public final ImmutableList<Message> messages;
+    private final ImmutableList<Message> messages;
 
     protected ResultWithMessages(final ImmutableList<Message> messages) {
         this.messages = messages;
+    }
+
+    public List<Message> messages() {
+        return messages;
     }
 
     @Override
