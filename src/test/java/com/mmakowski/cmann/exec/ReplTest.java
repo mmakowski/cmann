@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 
+import java.util.Optional;
+
 public final class ReplTest {
     @Test
     public void stopsAtTheEndOfCurrentIterationWhenInterruptedFlagIsSet() throws InterruptedException {
@@ -18,24 +20,32 @@ public final class ReplTest {
         assertExecutionStopsWhenInterrupted(() -> { throw new InterruptedException("deliberate interrupt in test"); }, 1);
     }
 
+    @Test
+    public void stopsWhenNoCommandIsReturned() throws InterruptedException {
+        final CommandSource source = Mockito.mock(CommandSource.class);
+        Mockito.when(source.blockingGetCommand()).thenReturn(maybeCommand).thenReturn(Optional.empty());
+
+        final ResultSink sink = Mockito.mock(ResultSink.class);
+
+        final Repl repl = new Repl(source, mockExecutor(), sink);
+        repl.run();
+
+        Mockito.verify(sink, Mockito.times(1)).receive(result);
+        Mockito.verifyNoMoreInteractions(sink);
+    }
+
     private static void assertExecutionStopsWhenInterrupted(final Interrupt interrupt, final int expectedNumberOfCommandProcessed) throws InterruptedException {
         try {
-            final Command command = Mockito.mock(Command.class);
-            final Result result = Results.EMPTY;
-
             final CommandSource source = Mockito.mock(CommandSource.class);
-            final Answer<Command> interruptAndReturnCommand = invocation -> {
+            final Answer<Optional<Command>> interruptAndReturnCommand = invocation -> {
                 interrupt.execute();
-                return command;
+                return maybeCommand;
             };
-            Mockito.when(source.blockingGetCommand()).thenReturn(command).then(interruptAndReturnCommand).thenReturn(command);
-
-            final CommandExecutor executor = Mockito.mock(CommandExecutor.class);
-            Mockito.when(executor.execute(command)).thenReturn(result);
+            Mockito.when(source.blockingGetCommand()).thenReturn(maybeCommand).then(interruptAndReturnCommand).thenReturn(maybeCommand);
 
             final ResultSink sink = Mockito.mock(ResultSink.class);
 
-            final Repl repl = new Repl(source, executor, sink);
+            final Repl repl = new Repl(source, mockExecutor(), sink);
             clearInterruptedFlag();
             repl.run();
 
@@ -50,7 +60,17 @@ public final class ReplTest {
         Thread.interrupted();
     }
 
+    private static CommandExecutor mockExecutor() {
+        final CommandExecutor executor = Mockito.mock(CommandExecutor.class);
+        Mockito.when(executor.execute(command)).thenReturn(result);
+        return executor;
+    }
+
     private interface Interrupt {
         void execute() throws InterruptedException;
     }
+
+    private static final Command command = new Command() {};
+    private static final Optional<Command> maybeCommand = Optional.of(command);
+    private static final Result result = Results.EMPTY;
 }

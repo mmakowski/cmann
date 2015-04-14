@@ -3,6 +3,8 @@ package com.mmakowski.cmann.text;
 import com.mmakowski.cmann.exec.CommandSource;
 import com.mmakowski.cmann.model.Command;
 
+import java.util.Optional;
+
 public final class InputParsingCommandSource implements CommandSource {
     private final OutputWriter writer;
     private final InputReader reader;
@@ -15,8 +17,8 @@ public final class InputParsingCommandSource implements CommandSource {
     }
 
     @Override
-    public Command blockingGetCommand() throws InterruptedException {
+    public Optional<Command> blockingGetCommand() throws InterruptedException {
         writer.write("> ");
-        return parser.parse(reader.blockingReadLine());
+        return reader.blockingReadLine().map(parser::parse);
     }
 }

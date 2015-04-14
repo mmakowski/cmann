@@ -2,6 +2,7 @@ package com.mmakowski.cmann.acceptance;
 
 import com.mmakowski.cmann.text.InputReader;
 
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 
 final class BlockingQueueReader implements InputReader {
@@ -12,7 +13,7 @@ final class BlockingQueueReader implements InputReader {
     }
 
     @Override
-    public String blockingReadLine() throws InterruptedException {
-        return queue.take().replace("\n", "");
+    public Optional<String> blockingReadLine() throws InterruptedException {
+        return Optional.of(queue.take().replace("\n", ""));
     }
 }

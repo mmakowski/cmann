@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 
+import java.util.Optional;
+
 public final class InputParsingCommandSourceTest {
     @Test
     public void parsesNextInputLine() throws InterruptedException {
@@ -17,7 +19,7 @@ public final class InputParsingCommandSourceTest {
         final OutputWriter writer = Mockito.mock(OutputWriter.class);
 
         final InputReader reader = Mockito.mock(InputReader.class);
-        Mockito.when(reader.blockingReadLine()).thenReturn(inputLine1).thenReturn(inputLine2);
+        Mockito.when(reader.blockingReadLine()).thenReturn(Optional.of(inputLine1)).thenReturn(Optional.of(inputLine2));
 
         final CommandParser parser = Mockito.mock(CommandParser.class);
         Mockito.when(parser.parse(inputLine1)).thenReturn(command1);
@@ -25,14 +27,15 @@ public final class InputParsingCommandSourceTest {
 
         final InputParsingCommandSource source = new InputParsingCommandSource(writer, reader, parser);
 
-        Assert.assertEquals(command1, source.blockingGetCommand());
-        Assert.assertEquals(command2, source.blockingGetCommand());
+        Assert.assertEquals(Optional.of(command1), source.blockingGetCommand());
+        Assert.assertEquals(Optional.of(command2), source.blockingGetCommand());
     }
 
     @Test
     public void outputsPromptBeforeProcessingInput() throws InterruptedException {
         final OutputWriter writer = Mockito.mock(OutputWriter.class);
         final InputReader reader = Mockito.mock(InputReader.class);
+        Mockito.when(reader.blockingReadLine()).thenReturn(Optional.empty());
         final CommandParser parser = Mockito.mock(CommandParser.class);
 
         final InputParsingCommandSource source = new InputParsingCommandSource(writer, reader, parser);
@@ -43,6 +46,18 @@ public final class InputParsingCommandSourceTest {
         inOrder.verify(writer, Mockito.times(1)).write("> ");
         inOrder.verify(reader, Mockito.times(1)).blockingReadLine();
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void returnsEmptyWhenReaderReturnsEmpty() throws InterruptedException {
+        final OutputWriter writer = Mockito.mock(OutputWriter.class);
+        final InputReader reader = Mockito.mock(InputReader.class);
+        Mockito.when(reader.blockingReadLine()).thenReturn(Optional.empty());
+        final CommandParser parser = Mockito.mock(CommandParser.class);
+
+        final InputParsingCommandSource source = new InputParsingCommandSource(writer, reader, parser);
+
+        Assert.assertEquals(Optional.empty(), source.blockingGetCommand());
     }
 }
 

@@ -1,5 +1,7 @@
 package com.mmakowski.cmann.text;
 
+import java.util.Optional;
+
 public interface InputReader {
-    String blockingReadLine() throws InterruptedException;
+    Optional<String> blockingReadLine() throws InterruptedException;
 }

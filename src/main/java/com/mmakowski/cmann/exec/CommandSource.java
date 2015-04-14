@@ -2,6 +2,8 @@ package com.mmakowski.cmann.exec;
 
 import com.mmakowski.cmann.model.Command;
 
+import java.util.Optional;
+
 public interface CommandSource {
-    Command blockingGetCommand() throws InterruptedException;
+    Optional<Command> blockingGetCommand() throws InterruptedException;
 }

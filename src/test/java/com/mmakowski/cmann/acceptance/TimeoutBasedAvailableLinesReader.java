@@ -6,6 +6,7 @@ import com.mmakowski.util.TimingOut;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 
 final class TimeoutBasedAvailableLinesReader {
@@ -24,7 +25,9 @@ final class TimeoutBasedAvailableLinesReader {
         final ImmutableList.Builder<String> readLines = ImmutableList.builder();
         while (!endOfAvailableOutputReached) {
             try {
-                readLines.add(TimingOut.execute((TimingOut.Block<String>) reader::blockingReadLine, maxLineReadDelay));
+                final Optional<String> line = TimingOut.execute((TimingOut.Block<Optional<String>>) reader::blockingReadLine, maxLineReadDelay);
+                if (line.isPresent()) readLines.add(line.get());
+                else endOfAvailableOutputReached = true;
             } catch (final TimeoutException e) {
                 endOfAvailableOutputReached = true;
             }

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Optional;
 
 public final class StreamInputReader implements InputReader {
     private final BufferedReader in;
@@ -13,9 +14,9 @@ public final class StreamInputReader implements InputReader {
     }
 
     @Override
-    public String blockingReadLine() throws InterruptedException {
+    public Optional<String> blockingReadLine() throws InterruptedException {
         try {
-            return in.readLine();
+            return Optional.ofNullable(in.readLine());
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }

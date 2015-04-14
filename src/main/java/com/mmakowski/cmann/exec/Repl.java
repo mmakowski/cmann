@@ -1,5 +1,9 @@
 package com.mmakowski.cmann.exec;
 
+import com.mmakowski.cmann.model.Command;
+
+import java.util.Optional;
+
 public final class Repl implements Runnable {
     private final CommandSource source;
     private final CommandExecutor executor;
@@ -13,9 +17,12 @@ public final class Repl implements Runnable {
 
     @Override
     public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
+        boolean endOfInputReached = false;
+        while (!endOfInputReached && !Thread.currentThread().isInterrupted()) {
             try {
-                sink.receive(executor.execute(source.blockingGetCommand()));
+                final Optional<Command> maybeCommand = source.blockingGetCommand();
+                if (maybeCommand.isPresent()) sink.receive(executor.execute(maybeCommand.get()));
+                else endOfInputReached = true;
             } catch (final InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

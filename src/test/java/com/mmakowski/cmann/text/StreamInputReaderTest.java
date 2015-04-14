@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Optional;
 
 public class StreamInputReaderTest {
     @Test
@@ -13,7 +14,7 @@ public class StreamInputReaderTest {
         final String inputText = "an input line\n";
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(inputText.getBytes(Charsets.UTF_8))) {
             final StreamInputReader reader = new StreamInputReader(inputStream);
-            Assert.assertEquals(stripEndOfLine(inputText), reader.blockingReadLine());
+            Assert.assertEquals(Optional.of(stripEndOfLine(inputText)), reader.blockingReadLine());
         }
     }
 
@@ -25,7 +26,15 @@ public class StreamInputReaderTest {
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(inputText.getBytes(Charsets.UTF_8))) {
             final StreamInputReader reader = new StreamInputReader(inputStream);
             reader.blockingReadLine();
-            Assert.assertEquals(stripEndOfLine(secondLine), reader.blockingReadLine());
+            Assert.assertEquals(Optional.of(stripEndOfLine(secondLine)), reader.blockingReadLine());
+        }
+    }
+
+    @Test
+    public void returnsEmptyWhenEndOfStreamIsReached() throws InterruptedException, IOException {
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(new byte[] {})) {
+            final StreamInputReader reader = new StreamInputReader(inputStream);
+            Assert.assertEquals(Optional.empty(), reader.blockingReadLine());
         }
     }
 
