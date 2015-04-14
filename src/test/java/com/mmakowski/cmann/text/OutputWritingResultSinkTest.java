@@ -1,7 +1,7 @@
 package com.mmakowski.cmann.text;
 
 import com.mmakowski.cmann.model.Message;
-import com.mmakowski.cmann.model.Result;
+import com.mmakowski.cmann.model.ReadingResult;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -22,7 +22,7 @@ public final class OutputWritingResultSinkTest {
         final OutputWriter out = Mockito.mock(OutputWriter.class);
 
         final OutputWritingResultSink sink = new OutputWritingResultSink(out, format);
-        final Result result = Result.withMessages(message1, message2);
+        final ReadingResult result = ReadingResult.withMessages(message1, message2);
 
         sink.receive(result);
 

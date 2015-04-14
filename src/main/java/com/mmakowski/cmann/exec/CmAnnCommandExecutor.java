@@ -22,19 +22,19 @@ public final class CmAnnCommandExecutor implements CommandExecutor {
 
     private Result execute(final Posting posting) {
         store.insertMessage(new Message(posting.userName, posting.message, clock.currentInstant()));
-        return Result.EMPTY;
+        return Results.EMPTY;
     }
 
     private Result execute(final Reading reading) {
-        return Result.withMessages(store.messagesByUser(reading.userName));
+        return ReadingResult.withMessages(store.messagesByUser(reading.userName));
     }
 
     private Result execute(final Following following) {
         store.insertSubsription(following.follower, following.followee);
-        return Result.EMPTY;
+        return Results.EMPTY;
     }
 
     private Result execute(final Wall wall) {
-        return Result.withMessages(store.wallMessages(wall.userName));
+        return ReadingResult.withMessages(store.wallMessages(wall.userName));
     }
 }

@@ -20,7 +20,7 @@ public final class CmAnnCommandExecutorTest {
 
         Mockito.verify(store, Mockito.times(1)).insertMessage(testMessage);
         Mockito.verifyNoMoreInteractions(store);
-        Assert.assertEquals(Result.EMPTY, postingResult);
+        Assert.assertEquals(Results.EMPTY, postingResult);
     }
 
     @Test
@@ -33,7 +33,7 @@ public final class CmAnnCommandExecutorTest {
         Mockito.when(store.messagesByUser(alice)).thenReturn(messagesByAlice);
         final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(store, new TestClock());
 
-        Assert.assertEquals(Result.withMessages(messagesByAlice), executor.execute(new Reading(alice)));
+        Assert.assertEquals(ReadingResult.withMessages(messagesByAlice), executor.execute(new Reading(alice)));
     }
 
     @Test
@@ -45,7 +45,7 @@ public final class CmAnnCommandExecutorTest {
 
         Mockito.verify(store, Mockito.times(1)).insertSubsription("Charlie", alice);
         Mockito.verifyNoMoreInteractions(store);
-        Assert.assertEquals(Result.EMPTY, followingResult);
+        Assert.assertEquals(Results.EMPTY, followingResult);
     }
 
     @Test
@@ -58,7 +58,7 @@ public final class CmAnnCommandExecutorTest {
         Mockito.when(store.wallMessages(alice)).thenReturn(messagesFromAlicesWall);
         final CmAnnCommandExecutor executor = new CmAnnCommandExecutor(store, new TestClock());
 
-        Assert.assertEquals(Result.withMessages(messagesFromAlicesWall), executor.execute(new Wall(alice)));
+        Assert.assertEquals(ReadingResult.withMessages(messagesFromAlicesWall), executor.execute(new Wall(alice)));
     }
 
     private static final String alice = "Alice";

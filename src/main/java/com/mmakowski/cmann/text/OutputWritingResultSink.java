@@ -2,6 +2,7 @@ package com.mmakowski.cmann.text;
 
 import com.mmakowski.cmann.exec.ResultSink;
 import com.mmakowski.cmann.model.Message;
+import com.mmakowski.cmann.model.ReadingResult;
 import com.mmakowski.cmann.model.Result;
 
 public final class OutputWritingResultSink implements ResultSink {
@@ -15,6 +16,7 @@ public final class OutputWritingResultSink implements ResultSink {
 
     @Override
     public void receive(final Result result) {
-        for (final Message message : result.messages) out.writeLine(messageFormat.apply(message));
+        if (result instanceof ReadingResult)
+            for (final Message message : ((ReadingResult) result).messages) out.writeLine(messageFormat.apply(message));
     }
 }
