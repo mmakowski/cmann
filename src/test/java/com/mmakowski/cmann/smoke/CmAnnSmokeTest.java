@@ -17,8 +17,8 @@ import java.time.Instant;
 
 @Category(SmokeTest.class)
 public final class CmAnnSmokeTest {
-    private static final Duration totalReadTimeout = Duration.ofSeconds(2);
     private static final Duration outputTimeout = Duration.ofSeconds(1);
+    private static final Duration extraReadTimeout = Duration.ofSeconds(1);
     private static final Duration retryDelay = Duration.ofMillis(100);
 
     @Test
@@ -31,7 +31,7 @@ public final class CmAnnSmokeTest {
             inputWriter.println("Alice");
             inputWriter.flush();
             eventually(() -> {
-                final String outputLine = TimingOut.execute((TimingOut.Block<String>) outputReader::readLine, totalReadTimeout);
+                final String outputLine = TimingOut.execute((TimingOut.Block<String>) outputReader::readLine, outputTimeout.plus(extraReadTimeout));
                 Assert.assertThat(outputLine, CoreMatchers.containsString("smoke test"));
             });
         } finally {
